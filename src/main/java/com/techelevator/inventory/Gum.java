@@ -6,6 +6,10 @@ public class Gum extends Product{
         super(name, price);
     }
 
+    public Gum(String name, double price) {
+        super(name, price);
+    }
+
     @Override
     public String purchaseNoise() {
         return "Chew Chew, Yum!";

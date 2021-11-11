@@ -12,6 +12,10 @@ public abstract class Product {
         quantity = INITIAL_STOCK_AMOUNT;
     }
 
+    public Product(String name, double price) {
+        this(name, (int)(price * 100));
+    }
+
     public abstract String purchaseNoise();
 
     public int getQuantity() {
@@ -30,5 +34,10 @@ public abstract class Product {
         quantity--;
 //        quantity -= 1;
 //        quantity = quantity - 1;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%15s \tprice: $%.2f \t quantity: %d", name, priceInCents/100.0, quantity);
     }
 }

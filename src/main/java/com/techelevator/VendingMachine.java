@@ -6,17 +6,44 @@ import com.techelevator.exceptions.OutOfStockException;
 import com.techelevator.exceptions.VendingMachineException;
 import com.techelevator.inventory.Product;
 
+import java.io.FileNotFoundException;
 import java.util.Map;
 
 public class VendingMachine {
+    private final int BILL_1  = 1;
+    private final int BILL_2  = 2;
+    private final int BILL_5  = 5;
+    private final int BILL_10 = 10;
+
     private int currentBalanceInCents;
     private Map<String, Product> inventory;
     private InventoryProvider inventoryProvider;
     private TransactionLogger transactionLogger;
 
+    public VendingMachine () throws FileNotFoundException {
+        inventoryProvider = new InventoryProvider();
+        inventory = inventoryProvider.loadInventory();
+    }
+
+    public String displayInventory() {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (String slot: inventory.keySet()) {
+            stringBuilder.append(slot);
+            stringBuilder.append(": ");
+            stringBuilder.append(inventory.get(slot).toString());
+            stringBuilder.append("\n");
+        }
+        return stringBuilder.toString();
+    }
 
     public void feedMoney(int dollars) {
-        this.currentBalanceInCents += dollars * 100;
+        if (dollars == BILL_1 || dollars == BILL_2 || dollars == BILL_5 || dollars == BILL_10) {
+            this.currentBalanceInCents += dollars * 100;
+        }
+    }
+
+    public int getCurrentBalanceInCents() {
+        return currentBalanceInCents;
     }
 
     public Product getProductAtSlot(String slot) throws InvalidSlotException {
@@ -50,6 +77,8 @@ public class VendingMachine {
     }
 
     public Change returnChange() {
-        return new Change(this.currentBalanceInCents);
+        int change = this.currentBalanceInCents;
+        this.currentBalanceInCents = 0;
+        return new Change(change);
     }
 }
